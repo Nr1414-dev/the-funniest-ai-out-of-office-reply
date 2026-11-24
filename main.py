@@ -48,6 +48,14 @@ def validate_line(text):
         raise SystemExit("entry must be a single line, got a line break")
     if text.strip() == "":
         raise SystemExit("entry must not be only whitespace")
+    # Control characters (other than the line itself) would survive the gate
+    # as bytes but break the judge's reading of the text, so refuse them.
+    for ch in text:
+        if ord(ch) < 32:
+            raise SystemExit(
+                "entry must not contain control characters, got U+%04X"
+                % ord(ch)
+            )
 
 
 def main():
